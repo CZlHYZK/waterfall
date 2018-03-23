@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>自适应宽度颜色高度随机瀑布流</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+    }
+    html,
+    body {
+      width: 100%;
+    }
+
+    .container {
+
+      margin: 5px auto;
+      position: relative;
+      width:100%;
+    }
+
+    .container>ul {
+      width: 100%;
+    }
+
+    ul,
+    li {
+      list-style: none;
+    }
+
+    li {
+      width: 200px;
+      position: absolute;
+      display: block;
+      transition: all 0.3s;
+      box-sizing: border-box;
+      border:5px white solid;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <ul>
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+      <li>7</li>
+      <li>8</li>
+      <li>9</li>
+      <li>10</li>
+      <li>11</li>
+      <li>12</li>
+      <li>13</li>
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+      <li>7</li>
+      <li>8</li>
+      <li>9</li>
+      <li>10</li>
+      <li>11</li>
+      <li>12</li>
+      <li>13</li>
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+      <li>7</li>
+      <li>8</li>
+      <li>9</li>
+      <li>10</li>
+      <li>11</li>
+      <li>12</li>
+      <li>13</li>
+
+    </ul>
+  </div>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    var arr;//存储的每一列的高度
+    var lis=$(".container>ul>li");
+    function init() {
+      arr = [];
+      var columnCount = Math.floor($("body").width() / ($(".container>ul>li").outerWidth(true)));
+      $(".container").css("width",columnCount*$(".container>ul>li").outerWidth(true)+"px");
+      for (var i = 0; i < columnCount; i++)
+        arr[i] = 0;
+    }
+
+    function getMinColumnIndex() {
+      return arr.indexOf(Math.min.apply(null, arr));
+    }
+    function getRandomColor() {
+      var colors = ["red", "green", "yellow", "pink", "purple"];
+      var index = Math.floor(Math.random() * 5);
+      return colors[index];
+    }
+    function getRandomHeight() {
+      return Math.floor(150 + Math.random() * 351);
+      // [a,b]=>Math.floor(a+Math.random()*(b-a+1));
+    }
+    
+    function load() {
+      lis.each(function (index, ele) {
+        var minColumnIndex = getMinColumnIndex();
+        $(ele).css({
+          "background-color": getRandomColor(),
+          "height": getRandomHeight() + "px",
+          top: arr[minColumnIndex] + "px",
+          left: $(".container>ul>li").width() * minColumnIndex + 10 * minColumnIndex + "px"
+        });
+        arr[minColumnIndex] += ($(ele).height() + 10);
+      });
+    }
+    function reLoad(){
+      init();
+      lis.each(function (index, ele) {
+        var minColumnIndex = getMinColumnIndex();
+        $(ele).css({
+          top: arr[minColumnIndex] + "px",
+          left: $(".container>ul>li").outerWidth(true) * minColumnIndex + "px"
+        });
+        arr[minColumnIndex] += ($(ele).height() + 10);
+      });
+    }
+    init();
+    load();
+    $(window).resize(function () {
+      reLoad();
+    });
+  </script>
+</body>
+
+</html>
